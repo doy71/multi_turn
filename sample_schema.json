@@ -1,0 +1,31 @@
+{
+  "sample_id": "sample_000001",
+  "task_type": "memory_probe",
+  "facts": [
+    {
+      "fact_id": "f1",
+      "text": "By the way, my blue umbrella is in the library.",
+      "answer_target": "the library",
+      "priority": 1,
+      "revealed_at_turn": 3
+    }
+  ],
+  "turns": [
+    {"turn_id": 0, "role": "user", "text": "I went to campus today.", "contains_fact_ids": []},
+    {"turn_id": 1, "role": "assistant", "text": "Sounds busy.", "contains_fact_ids": [], "source": "dataset"},
+    {"turn_id": 2, "role": "user", "text": "I also grabbed coffee.", "contains_fact_ids": []},
+    {"turn_id": 3, "role": "user", "text": "By the way, my blue umbrella is in the library.", "contains_fact_ids": ["f1"]},
+    {"turn_id": 4, "role": "assistant", "text": "Got it.", "contains_fact_ids": [], "source": "dataset"},
+    {"turn_id": 5, "role": "user", "text": "Then I met a friend.", "contains_fact_ids": []}
+  ],
+  "final_question": {
+    "role": "user",
+    "text": "Where did I say my blue umbrella was?",
+    "target_fact_ids": ["f1"]
+  },
+  "gold_answer": "the library",
+  "metadata": {
+    "language": "en",
+    "domain": "casual_chat"
+  }
+}
