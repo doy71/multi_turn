@@ -169,7 +169,11 @@ def keep_chat_prefix(chain: List[Dict[str, str]], max_total_turns: int) -> List[
 
 
 def generate_numeric_value(rng: random.Random) -> str:
-    return "".join(rng.choice("0123456789") for _ in range(5))
+    # Avoid leading-zero IDs (e.g., "01234"), which are often verbalized as
+    # "1234" by models and then marked incorrect by exact matching.
+    first = rng.choice("123456789")
+    rest = "".join(rng.choice("0123456789") for _ in range(4))
+    return first + rest
 
 
 def choose_template(rng: random.Random, needle_style: str) -> Dict[str, str]:
