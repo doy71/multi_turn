@@ -27,6 +27,8 @@ def run():
     assert kind in {"magic_number", "secret_code", "reference_id"}
     assert value in fact_text
     assert question.endswith("?")
+    assert len(value) == 5
+    assert value[0] != "0"
     print("  [PASS] generate_needle")
 
     sample = build_sample(
