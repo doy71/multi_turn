@@ -2,4 +2,3 @@ transformers>=4.49.0
 accelerate>=1.0.0
 datasets>=3.0.0
 pandas>=2.0.0
-flash-attn>=2.5.0
