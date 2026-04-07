@@ -6,9 +6,12 @@ from .data_types import ConversationSample
 
 
 NEUTRAL_ASSISTANT_REPLY = "I understand. Please continue."
+DEFAULT_SYSTEM_INSTRUCTION = (
+    "You are a helpful assistant. Read the conversation carefully and answer the final "
+    "question using the information explicitly provided earlier in the conversation. "
+    "If the answer was given earlier, repeat it exactly."
+)
 
-
-# Core settings (documented, tested, default in run_experiment.py)
 CORE_SETTINGS = {
     "packed_single_turn",
     "multi_turn_neutral",
@@ -16,13 +19,16 @@ CORE_SETTINGS = {
     "multi_turn_self_generated",
 }
 
-# Experimental settings (implemented but not yet validated)
 EXPERIMENTAL_SETTINGS = {
     "recap_final_turn",
     "snowball_user",
 }
 
 SETTING_NAMES = CORE_SETTINGS | EXPERIMENTAL_SETTINGS
+
+
+def _system_instruction(sample: ConversationSample) -> str:
+    return sample.system_instruction or DEFAULT_SYSTEM_INSTRUCTION
 
 
 def build_messages(sample: ConversationSample, setting: str) -> List[Dict[str, str]]:
@@ -60,7 +66,10 @@ def _build_packed_single_turn(sample: ConversationSample) -> List[Dict[str, str]
         "Answer the final question using the earlier user information.\n\n"
         + "\n".join(user_lines)
     )
-    return [{"role": "user", "content": full_user}]
+    return [
+        {"role": "system", "content": _system_instruction(sample)},
+        {"role": "user", "content": full_user},
+    ]
 
 
 def _build_multi_turn(
@@ -69,7 +78,9 @@ def _build_multi_turn(
     snowball: bool,
     recap: bool,
 ) -> List[Dict[str, str]]:
-    messages: List[Dict[str, str]] = []
+    messages: List[Dict[str, str]] = [
+        {"role": "system", "content": _system_instruction(sample)}
+    ]
     revealed_user_utts: List[str] = []
 
     for t in sample.turns:

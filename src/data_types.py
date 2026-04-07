@@ -37,8 +37,22 @@ class ConversationSample:
     turns: List[Turn]
     final_question: FinalQuestion
     gold_answer: str
+    system_instruction: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def fact_map(self) -> Dict[str, Fact]:
         return {f.fact_id: f for f in self.facts}
+
+    @classmethod
+    def from_dict(cls, obj: Dict[str, Any]) -> "ConversationSample":
+        return cls(
+            sample_id=obj["sample_id"],
+            task_type=obj["task_type"],
+            facts=[Fact(**x) for x in obj["facts"]],
+            turns=[Turn(**x) for x in obj["turns"]],
+            final_question=FinalQuestion(**obj["final_question"]),
+            gold_answer=obj["gold_answer"],
+            system_instruction=obj.get("system_instruction"),
+            metadata=obj.get("metadata", {}),
+        )
